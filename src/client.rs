@@ -1,5 +1,5 @@
 // Tools for communicating with the FIST server
-use std::io::{Error, Write};
+use std::io::{Error, Read, Write};
 use std::net::TcpStream;
 
 // The client for the FIST server.
@@ -31,9 +31,13 @@ impl FistClient {
 
     // Sends the `VERSION` command to the FIST server
     // which returns the current version of FIST
-    pub fn version(self) -> Result<usize, Error> {
-        let command_string = b"VERSION\r\n";
-        self.conn.unwrap().write(&command_string[0..])
+    pub fn version(&self) -> Result<Vec<u8>, Error> {
+        let mut ver: [u8; 8] = [0;8];
+        const COMMAND_STRING: &[u8] = b"VERSION\r\n";
+        let mut conn = self.conn.as_ref().unwrap();
+        conn.write(COMMAND_STRING)?;
+        conn.read(&mut ver[..])?;
+        Ok(ver.iter().cloned().collect())
     }
 
     // Return the address of the FIST server
