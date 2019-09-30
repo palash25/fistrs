@@ -18,8 +18,8 @@ impl FistClient {
     /// ## Example
     ///
     /// ```
-    /// let client = FistClient::new("localhost", "5575");
-    /// client.connect();
+    /// let client = fistrs::FistClient::new("localhost", "5575");
+    /// assert_eq!(client.get_addr, "localhost:5575");
     /// ```
     pub fn new(ip: &str, port: &str) -> Self {
         FistClient {
@@ -34,7 +34,6 @@ impl FistClient {
         match res {
             Ok(c) => {
                 self.conn = Some(c);
-                println!("done\n");
             },
             Err(_) => panic!(),
         }
